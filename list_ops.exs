@@ -12,7 +12,7 @@ defmodule ListOps do
   end
 
   defp _count([],acc), do: acc
-  defp _count([h|t], acc), do: _count(t,acc + 1)
+  defp _count([_h|t], acc), do: _count(t, acc + 1)
 
   @spec reverse(list) :: list
   def reverse(l) do
@@ -46,7 +46,7 @@ defmodule ListOps do
     _reduce(l, acc, f)
   end
 
-  defp _reduce([], acc, f), do: acc
+  defp _reduce([], acc, _f), do: acc
   defp _reduce([h|t], acc, f), do: _reduce(t, f.(h, acc), f)
 
   @spec append(list, list) :: list
@@ -59,13 +59,15 @@ defmodule ListOps do
 
   @spec concat([[any]]) :: [any]
   def concat(ll) do
-    _concat(ll, [], 0)
+    cond do
+      ll == [] -> []
+      count(ll) == 1 -> hd(ll)
+      true -> _concat(Enum.split(ll, div(count(ll), 2)))
+    end
   end
 
-  defp _concat(_, acc, 1000000), do: acc
-  defp _concat([], acc, _n), do: acc
-  defp _concat([h|t], acc, n) do
-    _concat(t, append(acc, h), n + 1)
+  defp _concat({left, right}) do
+    append(concat(left), concat(right))
   end
 
 end
