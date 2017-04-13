@@ -51,11 +51,21 @@ defmodule ListOps do
 
   @spec append(list, list) :: list
   def append(a, b) do
-
+    _append(reverse(a), b)
   end
+
+  defp _append(append_list, []), do: reverse(append_list)
+  defp _append(append_list, [h|t]), do: _append([h] ++ append_list, t)
 
   @spec concat([[any]]) :: [any]
   def concat(ll) do
-
+    _concat(ll, [], 0)
   end
+
+  defp _concat(_, acc, 1000000), do: acc
+  defp _concat([], acc, _n), do: acc
+  defp _concat([h|t], acc, n) do
+    _concat(t, append(acc, h), n + 1)
+  end
+
 end
